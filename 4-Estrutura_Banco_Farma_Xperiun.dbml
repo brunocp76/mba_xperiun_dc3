@@ -1,0 +1,97 @@
+Project Farma_Xperiun {
+  database_type: "SQLite"
+  note: "Esquema relacional completo da base Farma Xperiun, com normalizações e relacionamentos explícitos."
+}
+
+
+// ---------------------------------------------------------------------------
+// Tabela d_calendario
+// ---------------------------------------------------------------------------
+Table d_calendario {
+  data string [pk]
+  ano int
+  mes int
+  nome_mes string
+  trimestre int
+  semestre int
+  dia_semana int
+  nome_dia_semana string
+  is_fim_semana int
+  is_feriado int
+}
+
+// ---------------------------------------------------------------------------
+// Tabela d_fornecedor
+// ---------------------------------------------------------------------------
+Table d_fornecedor {
+  fornecedor_id int [pk]
+  nome string
+  cidade string
+  estado string
+  regiao string
+  prazo_entrega_dias int
+}
+
+// ---------------------------------------------------------------------------
+// Tabela d_meta_mensal
+// ---------------------------------------------------------------------------
+Table d_meta_mensal {
+  meta_id int [pk]
+  ano int
+  mes int
+  meta_receita decimal
+  meta_quantidade int
+}
+
+// ---------------------------------------------------------------------------
+// Tabela d_produto
+// ---------------------------------------------------------------------------
+Table d_produto {
+  produto_id int [pk]
+  nome_produto string
+  codigo_atc string
+  categoria string
+  grupo_terapeutico string
+  preco_unitario decimal
+  custo_unitario decimal
+  margem_percentual decimal
+  exige_receita int
+}
+
+// ---------------------------------------------------------------------------
+// Tabela d_turno
+// ---------------------------------------------------------------------------
+Table d_turno {
+  turno_id int [pk]
+  nome_turno string
+  hora_inicio int
+  hora_fim int
+}
+
+// ---------------------------------------------------------------------------
+// Tabela f_vendas
+// ---------------------------------------------------------------------------
+Table f_vendas {
+  venda_id int [pk]
+  data string
+  hora int
+  turno_id int
+  produto_id int
+  fornecedor_id int
+  quantidade decimal
+  preco_unitario decimal
+  receita_bruta decimal
+  desconto decimal
+  receita_liquida decimal
+  custo_total decimal
+  lucro decimal
+  forma_pagamento string
+}
+
+// ---------------------------------------------------------------------------
+// Relacionamentos (Foreign Keys)
+// ---------------------------------------------------------------------------
+Ref: f_vendas.data > d_calendario.data
+Ref: f_vendas.turno_id > d_turno.turno_id
+Ref: f_vendas.produto_id > d_produto.produto_id
+Ref: f_vendas.fornecedor_id > d_fornecedor.fornecedor_id
