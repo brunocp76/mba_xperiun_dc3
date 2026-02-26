@@ -1,5 +1,5 @@
 Project Farma_Xperiun {
-  database_type: "SQLite"
+  database_type: "PostgreSQL"
   note: "Esquema relacional completo da base Farma Xperiun, com normalizações e relacionamentos explícitos."
 }
 
@@ -8,76 +8,76 @@ Project Farma_Xperiun {
 // Tabela d_calendario
 // ---------------------------------------------------------------------------
 Table d_calendario {
-  data string [pk]
-  ano int
-  mes int
-  nome_mes string
-  trimestre int
-  semestre int
-  dia_semana int
-  nome_dia_semana string
-  is_fim_semana int
-  is_feriado int
+  data date [pk]
+  ano integer
+  mes integer
+  nome_mes text
+  trimestre integer
+  semestre integer
+  dia_semana integer
+  nome_dia_semana text
+  is_fim_semana boolean
+  is_feriado boolean
 }
 
 // ---------------------------------------------------------------------------
 // Tabela d_fornecedor
 // ---------------------------------------------------------------------------
 Table d_fornecedor {
-  fornecedor_id int [pk]
-  nome string
-  cidade string
-  estado string
-  regiao string
-  prazo_entrega_dias int
+  fornecedor_id integer [pk]
+  nome text
+  cidade text
+  estado text
+  regiao text
+  prazo_entrega_dias integer
 }
 
 // ---------------------------------------------------------------------------
 // Tabela d_meta_mensal
 // ---------------------------------------------------------------------------
 Table d_meta_mensal {
-  meta_id int [pk]
-  ano int
-  mes int
+  meta_id integer [pk]
+  ano integer
+  mes integer
   meta_receita decimal
-  meta_quantidade int
+  meta_quantidade integer
 }
 
 // ---------------------------------------------------------------------------
 // Tabela d_produto
 // ---------------------------------------------------------------------------
 Table d_produto {
-  produto_id int [pk]
-  nome_produto string
-  codigo_atc string
-  categoria string
-  grupo_terapeutico string
+  produto_id integer [pk]
+  nome_produto text
+  codigo_atc text
+  categoria text
+  grupo_terapeutico text
   preco_unitario decimal
   custo_unitario decimal
   margem_percentual decimal
-  exige_receita int
+  exige_receita boolean
 }
 
 // ---------------------------------------------------------------------------
 // Tabela d_turno
 // ---------------------------------------------------------------------------
 Table d_turno {
-  turno_id int [pk]
-  nome_turno string
-  hora_inicio int
-  hora_fim int
+  turno_id integer [pk]
+  nome_turno text
+  hora_inicio integer
+  hora_fim integer
 }
 
 // ---------------------------------------------------------------------------
 // Tabela f_vendas
 // ---------------------------------------------------------------------------
 Table f_vendas {
-  venda_id int [pk]
-  data string
-  hora int
-  turno_id int
-  produto_id int
-  fornecedor_id int
+  venda_id integer [pk]
+  data date
+  hora integer
+  turno_id integer
+  produto_id integer
+  fornecedor_id integer
   quantidade decimal
   preco_unitario decimal
   receita_bruta decimal
@@ -85,7 +85,7 @@ Table f_vendas {
   receita_liquida decimal
   custo_total decimal
   lucro decimal
-  forma_pagamento string
+  forma_pagamento text
 }
 
 // ---------------------------------------------------------------------------

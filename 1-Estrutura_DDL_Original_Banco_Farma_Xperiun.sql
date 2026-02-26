@@ -42,7 +42,7 @@
 ---------------------------------------------------------------------------
 
 CREATE TABLE d_calendario (
-    data TEXT PRIMARY KEY,
+    data DATE PRIMARY KEY,
     ano INTEGER,
     mes INTEGER,
     nome_mes TEXT,
@@ -50,8 +50,8 @@ CREATE TABLE d_calendario (
     semestre INTEGER,
     dia_semana INTEGER,
     nome_dia_semana TEXT,
-    is_fim_semana INTEGER,
-    is_feriado INTEGER
+    is_fim_semana BOOLEAN,
+    is_feriado BOOLEAN
 )
 
 
@@ -77,7 +77,7 @@ CREATE TABLE d_meta_mensal (
     meta_id INTEGER PRIMARY KEY,
     ano INTEGER,
     mes INTEGER,
-    meta_receita REAL,
+    meta_receita NUMERIC(12, 2),
     meta_quantidade INTEGER
 )
 
@@ -92,10 +92,10 @@ CREATE TABLE d_produto (
     codigo_atc TEXT,
     categoria TEXT,
     grupo_terapeutico TEXT,
-    preco_unitario REAL,
-    custo_unitario REAL,
-    margem_percentual REAL,
-    exige_receita INTEGER
+    preco_unitario NUMERIC(12, 2),
+    custo_unitario NUMERIC(12, 2),
+    margem_percentual NUMERIC(12, 2),
+    exige_receita BOOLEAN
 )
 
 
@@ -117,18 +117,18 @@ CREATE TABLE d_turno (
 
 CREATE TABLE f_vendas (
     venda_id INTEGER PRIMARY KEY,
-    data TEXT,
+    data DATE,
     hora INTEGER,
     turno_id INTEGER,
     produto_id INTEGER,
     fornecedor_id INTEGER,
     quantidade REAL,
-    preco_unitario REAL,
-    receita_bruta REAL,
-    desconto REAL,
-    receita_liquida REAL,
-    custo_total REAL,
-    lucro REAL,
+    preco_unitario NUMERIC(12, 2),
+    receita_bruta NUMERIC(12, 2),
+    desconto NUMERIC(12, 2),
+    receita_liquida NUMERIC(12, 2),
+    custo_total NUMERIC(12, 2),
+    lucro NUMERIC(12, 2),
     forma_pagamento TEXT,
     FOREIGN KEY (data) REFERENCES d_calendario(data),
     FOREIGN KEY (turno_id) REFERENCES d_turno(turno_id),
