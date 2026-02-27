@@ -1,4 +1,5 @@
 .previas/
+.previas/*.*
 documentacao_farma_xperiun.docx
 Descricao_do_Desafio.md
 farma_xperiun.db
