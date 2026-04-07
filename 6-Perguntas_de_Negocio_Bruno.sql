@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------------------------------------
 --                                                                                                          
 --   ######                                                  ######                                         
 --   #     #   ##   #    #  ####   ####     #####  ######    #     #   ##   #####   ####   ####             
@@ -30,7 +31,7 @@
 --> Todo o Periodo
 ---------------------------------------------------------------------------
 
- SELECT SUM(vendas)                                                       AS vendas
+SELECT SUM(vendas)                                                       AS vendas
       , SUM(quantidade)                                                   AS qtde
       , SUM(meta_quantidade)                                              AS meta_qtde
       , ROUND(SUM(quantidade) - SUM(meta_quantidade), 2)                  AS dif_qtde
@@ -42,8 +43,8 @@
       , ROUND(SUM(receita_liquida) - SUM(meta_receita), 2)                AS dif_rec_liq
       , ROUND(100 * ((SUM(receita_bruta)   / SUM(meta_receita)) - 1), 2) || '%' AS perc_meta_rec_bruta
       , ROUND(100 * ((SUM(receita_liquida) / SUM(meta_receita)) - 1), 2) || '%' AS perc_meta_rec_liq
-   FROM (
-    SELECT 0                    AS vendas
+FROM (
+          SELECT 0                    AS vendas
          , 0.00                 AS receita_bruta
          , 0.00                 AS receita_liquida
          , 0.00                 AS quantidade
@@ -51,7 +52,7 @@
          , SUM(meta_quantidade) AS meta_quantidade
       FROM d_meta_mensal
    UNION
-    SELECT COUNT(*)             AS vendas
+      SELECT COUNT(*)             AS vendas
          , SUM(receita_bruta)   AS receita_bruta
          , SUM(receita_liquida) AS receita_liquida
          , SUM(quantidade)      AS quantidade
@@ -66,7 +67,7 @@
 --> Por Ano
 ---------------------------------------------------------------------------
 
- SELECT COALESCE(metas.ano, vendas.ano)                                            AS ano
+SELECT COALESCE(metas.ano, vendas.ano)                                            AS ano
       , vendas.vendas
       , vendas.quantidade
       , metas.meta_quantidade
@@ -79,13 +80,13 @@
       , ROUND(SUM(vendas.receita_liquida) - SUM(metas.meta_receita), 2)            AS dif_rec_liq
       , ROUND(100 * ((vendas.receita_bruta   / metas.meta_receita) - 1), 2) || '%' AS perc_meta_rec_bruta
       , ROUND(100 * ((vendas.receita_liquida / metas.meta_receita) - 1), 2) || '%' AS perc_meta_rec_liq
-   FROM (
+FROM (
     SELECT ano
          , SUM(meta_receita)     AS meta_receita
          , SUM(meta_quantidade)  AS meta_quantidade
-      FROM d_meta_mensal
-     GROUP BY ano
-     ORDER BY ano
+   FROM d_meta_mensal
+   GROUP BY ano
+   ORDER BY ano
          ) AS metas
    JOIN (
     SELECT CAST(strftime('%Y', "data") AS INTEGER) AS ano
@@ -93,13 +94,13 @@
          , SUM(receita_bruta)   AS receita_bruta
          , SUM(receita_liquida) AS receita_liquida
          , SUM(quantidade)      AS quantidade
-      FROM f_vendas
-     GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
-     ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+   FROM f_vendas
+   GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+   ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
      )  AS vendas
-     ON metas.ano = vendas.ano
-  GROUP BY COALESCE(metas.ano, vendas.ano)
-  ORDER BY COALESCE(metas.ano, vendas.ano);
+   ON metas.ano = vendas.ano
+GROUP BY COALESCE(metas.ano, vendas.ano)
+ORDER BY COALESCE(metas.ano, vendas.ano);
 
 
 ---------------------------------------------------------------------------
@@ -108,7 +109,7 @@
 --> Por Mes
 ---------------------------------------------------------------------------
 
- SELECT COALESCE(metas.anomes, vendas.anomes)                                      AS anomes
+SELECT COALESCE(metas.anomes, vendas.anomes)                                      AS anomes
       , vendas.vendas
       , vendas.quantidade
       , metas.meta_quantidade
@@ -121,13 +122,13 @@
       , ROUND(SUM(vendas.receita_liquida) - SUM(metas.meta_receita), 2)            AS dif_rec_liq
       , ROUND(100 * ((vendas.receita_bruta   / metas.meta_receita) - 1), 2) || '%' AS perc_meta_rec_bruta
       , ROUND(100 * ((vendas.receita_liquida / metas.meta_receita) - 1), 2) || '%' AS perc_meta_rec_liq
-   FROM (
+FROM (
     SELECT 100 * ano + mes       AS anomes
          , SUM(meta_receita)     AS meta_receita
          , SUM(meta_quantidade)  AS meta_quantidade
-      FROM d_meta_mensal
-     GROUP BY 100 * ano + mes
-     ORDER BY 100 * ano + mes
+   FROM d_meta_mensal
+   GROUP BY 100 * ano + mes
+   ORDER BY 100 * ano + mes
          ) AS metas
    JOIN (
     SELECT CAST(strftime('%Y%m', "data") AS INTEGER) AS anomes
@@ -135,20 +136,20 @@
          , SUM(receita_bruta)                        AS receita_bruta
          , SUM(receita_liquida)                      AS receita_liquida
          , SUM(quantidade)                           AS quantidade
-      FROM f_vendas
-     GROUP BY CAST(strftime('%Y%m', "data") AS INTEGER)
-     ORDER BY CAST(strftime('%Y%m', "data") AS INTEGER)
+   FROM f_vendas
+   GROUP BY CAST(strftime('%Y%m', "data") AS INTEGER)
+   ORDER BY CAST(strftime('%Y%m', "data") AS INTEGER)
      )  AS vendas
-     ON metas.anomes = vendas.anomes
-  GROUP BY COALESCE(metas.anomes, vendas.anomes)
-  ORDER BY COALESCE(metas.anomes, vendas.anomes);
+   ON metas.anomes = vendas.anomes
+GROUP BY COALESCE(metas.anomes, vendas.anomes)
+ORDER BY COALESCE(metas.anomes, vendas.anomes);
 
 
 ---------------------------------------------------------------------------
 --> 1. Conferindo as Informações do Documento Fornecido
 ---------------------------------------------------------------------------
 
- SELECT MIN("data")                      AS data_inicio
+SELECT MIN("data")                      AS data_inicio
       , MAX("data")                      AS data_fim
       , COUNT(*)                         AS vendas
       , COUNT(DISTINCT produto_id)       AS produtos
@@ -163,14 +164,14 @@
       , ROUND(SUM(custo_total)     / COUNT(*)         , 2) AS custo_por_transacao
       , ROUND(SUM(lucro)           / COUNT(*)         , 2) AS lucro_por_transacao
       , ROUND(100 * SUM(lucro)  / SUM(receita_liquida), 2) || '%' AS margem
-   FROM f_vendas;
+FROM f_vendas;
 
 
 ---------------------------------------------------------------------------
 --> 2. Criando um intervalo de metas ("semaforo" da gestao)
 ---------------------------------------------------------------------------
 
- SELECT COALESCE(metas.anomes, vendas.anomes)                                      AS anomes
+SELECT COALESCE(metas.anomes, vendas.anomes)                                      AS anomes
       , vendas.vendas
       , vendas.quantidade
       , metas.meta_quantidade
@@ -192,13 +193,13 @@
          WHEN vendas.receita_liquida / metas.meta_receita >=  1 THEN "Verde"
          ELSE "Desligado"
       END  AS semaforo_rec_liq
-   FROM (
+FROM (
     SELECT 100 * ano + mes       AS anomes
          , SUM(meta_receita)     AS meta_receita
          , SUM(meta_quantidade)  AS meta_quantidade
-      FROM d_meta_mensal
-     GROUP BY 100 * ano + mes
-     ORDER BY 100 * ano + mes
+   FROM d_meta_mensal
+   GROUP BY 100 * ano + mes
+   ORDER BY 100 * ano + mes
          ) AS metas
    JOIN (
     SELECT CAST(strftime('%Y%m', "data") AS INTEGER) AS anomes
@@ -206,13 +207,13 @@
          , SUM(receita_bruta)                        AS receita_bruta
          , SUM(receita_liquida)                      AS receita_liquida
          , SUM(quantidade)                           AS quantidade
-      FROM f_vendas
-     GROUP BY CAST(strftime('%Y%m', "data") AS INTEGER)
-     ORDER BY CAST(strftime('%Y%m', "data") AS INTEGER)
+   FROM f_vendas
+   GROUP BY CAST(strftime('%Y%m', "data") AS INTEGER)
+   ORDER BY CAST(strftime('%Y%m', "data") AS INTEGER)
      )  AS vendas
-     ON metas.anomes = vendas.anomes
-  GROUP BY COALESCE(metas.anomes, vendas.anomes)
-  ORDER BY COALESCE(metas.anomes, vendas.anomes);
+   ON metas.anomes = vendas.anomes
+GROUP BY COALESCE(metas.anomes, vendas.anomes)
+ORDER BY COALESCE(metas.anomes, vendas.anomes);
 
 
 ---------------------------------------------------------------------------
@@ -220,7 +221,7 @@
 -->    Agrupando pela Forma de Pagamento
 ---------------------------------------------------------------------------
 
- SELECT forma_pagamento
+SELECT forma_pagamento
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
       , SUM(lucro)           AS lucro
@@ -229,12 +230,12 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
-  GROUP BY forma_pagamento
-  ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
+FROM f_vendas
+GROUP BY forma_pagamento
+ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
       , forma_pagamento;
 
- SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
+SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
       , forma_pagamento
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
@@ -244,13 +245,13 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
-  GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+FROM f_vendas
+GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
       , forma_pagamento
-  ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
       , forma_pagamento;
 
- SELECT forma_pagamento
+SELECT forma_pagamento
       , CASE
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  1 THEN 'Jan'
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  2 THEN 'Fev'
@@ -274,10 +275,10 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
-  GROUP BY forma_pagamento
+FROM f_vendas
+GROUP BY forma_pagamento
       , CAST(strftime('%m', "data") AS INTEGER)
-  ORDER BY forma_pagamento
+ORDER BY forma_pagamento
       , CAST(strftime('%m', "data") AS INTEGER);
 
 
@@ -286,7 +287,7 @@
 -->    Agrupando pela Exigencia de Receita
 ---------------------------------------------------------------------------
 
- SELECT exige_receita
+SELECT exige_receita
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
       , SUM(lucro)           AS lucro
@@ -295,14 +296,14 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY exige_receita
-  ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY exige_receita
+ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
       , exige_receita;
 
- SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
+SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
       , exige_receita
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
@@ -312,16 +313,16 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
       , exige_receita
-  ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
       , SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
       , exige_receita;
 
- SELECT exige_receita
+SELECT exige_receita
       , CASE
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  1 THEN 'Jan'
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  2 THEN 'Fev'
@@ -345,12 +346,12 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY exige_receita
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY exige_receita
       , CAST(strftime('%m', "data") AS INTEGER)
-  ORDER BY exige_receita
+ORDER BY exige_receita
       , CAST(strftime('%m', "data") AS INTEGER);
 
 
@@ -359,7 +360,7 @@
 -->    Agrupando pelo Grupo Terapeutico
 ---------------------------------------------------------------------------
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
       , SUM(lucro)           AS lucro
@@ -368,14 +369,14 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY grupo_terapeutico
-  ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY grupo_terapeutico
+ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
       , grupo_terapeutico;
 
- SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
+SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
       , grupo_terapeutico
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
@@ -385,15 +386,15 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
       , grupo_terapeutico
-  ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
       , grupo_terapeutico;
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , CASE
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  1 THEN 'Jan'
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  2 THEN 'Fev'
@@ -417,12 +418,12 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY grupo_terapeutico
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY grupo_terapeutico
       , CAST(strftime('%m', "data") AS INTEGER)
-  ORDER BY grupo_terapeutico
+ORDER BY grupo_terapeutico
       , CAST(strftime('%m', "data") AS INTEGER);
 
 
@@ -431,7 +432,7 @@
 -->    Agrupando pela Categoria
 ---------------------------------------------------------------------------
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , categoria
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
@@ -441,16 +442,16 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY grupo_terapeutico
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY grupo_terapeutico
       , categoria
-  ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
+ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
       , grupo_terapeutico
       , categoria;
 
- SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
+SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
       , grupo_terapeutico
       , categoria
       , COUNT(*)             AS vendas
@@ -461,17 +462,17 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
       , grupo_terapeutico
       , categoria
-  ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
       , grupo_terapeutico
       , categoria;
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , categoria
       , CASE
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  1 THEN 'Jan'
@@ -496,13 +497,13 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY grupo_terapeutico
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY grupo_terapeutico
       , categoria
       , CAST(strftime('%m', "data") AS INTEGER)
-  ORDER BY grupo_terapeutico
+ORDER BY grupo_terapeutico
       , categoria
       , CAST(strftime('%m', "data") AS INTEGER);
 
@@ -512,7 +513,7 @@
 -->    Agrupando pelo Produto
 ---------------------------------------------------------------------------
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , categoria
       , nome_produto
       , COUNT(*)             AS vendas
@@ -523,18 +524,18 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY grupo_terapeutico
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY grupo_terapeutico
       , categoria
       , nome_produto
-  ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
+ORDER BY SUM(f_vendas.lucro) / SUM(f_vendas.receita_liquida) DESC
       , grupo_terapeutico
       , categoria
       , nome_produto;
 
- SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
+SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
       , grupo_terapeutico
       , categoria
       , nome_produto
@@ -546,19 +547,19 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
       , grupo_terapeutico
       , categoria
       , nome_produto
-  ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
       , grupo_terapeutico
       , categoria
       , nome_produto;
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , categoria
       , nome_produto
       , CASE
@@ -584,14 +585,14 @@
       , ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) || '%'   AS margem
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY grupo_terapeutico
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY grupo_terapeutico
       , categoria
       , nome_produto
       , CAST(strftime('%m', "data") AS INTEGER)
-  ORDER BY grupo_terapeutico
+ORDER BY grupo_terapeutico
       , categoria
       , nome_produto
       , CAST(strftime('%m', "data") AS INTEGER);
@@ -602,7 +603,7 @@
 -->    Agrupando pelo Turno
 ---------------------------------------------------------------------------
 
- SELECT nome_turno
+SELECT nome_turno
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
       , SUM(lucro)           AS lucro
@@ -612,16 +613,16 @@
       , ROUND(100 * SUM(lucro)    / SUM(receita_liquida), 2) || '%' AS margem
       , ROUND(100 * SUM(desconto) / SUM(receita_liquida), 2) || '%' AS desconto_receita
       , ROUND(100 * SUM(desconto) / SUM(lucro)          , 2) || '%' AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN (
     SELECT *
          , (hora_fim - hora_inicio) AS horas_turno
-      FROM d_turno) AS d_turno
-      ON f_vendas.turno_id = d_turno.turno_id
-  GROUP BY nome_turno
-  ORDER BY f_vendas.turno_id;
+   FROM d_turno) AS d_turno
+   ON f_vendas.turno_id = d_turno.turno_id
+GROUP BY nome_turno
+ORDER BY f_vendas.turno_id;
 
- SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
+SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
       , nome_turno
       , COUNT(*)             AS vendas
       , SUM(receita_liquida) AS receita_liquida
@@ -632,18 +633,18 @@
       , ROUND(100 * SUM(lucro)    / SUM(receita_liquida), 2) || '%' AS margem
       , ROUND(100 * SUM(desconto) / SUM(receita_liquida), 2) || '%' AS desconto_receita
       , ROUND(100 * SUM(desconto) / SUM(lucro)          , 2) || '%' AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN (
     SELECT *
          , (hora_fim - hora_inicio) AS horas_turno
-      FROM d_turno) AS d_turno
-      ON f_vendas.turno_id = d_turno.turno_id
-  GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+   FROM d_turno) AS d_turno
+   ON f_vendas.turno_id = d_turno.turno_id
+GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
       , nome_turno
-  ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
       , f_vendas.turno_id;
 
- SELECT nome_turno
+SELECT nome_turno
       , CASE
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  1 THEN 'Jan'
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  2 THEN 'Fev'
@@ -668,15 +669,15 @@
       , ROUND(100 * SUM(lucro)    / SUM(receita_liquida), 2) || '%' AS margem
       , ROUND(100 * SUM(desconto) / SUM(receita_liquida), 2) || '%' AS desconto_receita
       , ROUND(100 * SUM(desconto) / SUM(lucro)          , 2) || '%' AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN (
     SELECT *
          , (hora_fim - hora_inicio) AS horas_turno
-      FROM d_turno) AS d_turno
-      ON f_vendas.turno_id = d_turno.turno_id
-  GROUP BY nome_turno
+   FROM d_turno) AS d_turno
+   ON f_vendas.turno_id = d_turno.turno_id
+GROUP BY nome_turno
       , CAST(strftime('%m', "data") AS INTEGER)
-  ORDER BY f_vendas.turno_id
+ORDER BY f_vendas.turno_id
       , CAST(strftime('%m', "data") AS INTEGER);
 
 
@@ -684,7 +685,7 @@
 --> 5. Tentando avaliar opções de fornecedor
 ---------------------------------------------------------------------------
 
- SELECT CAST(COUNT(*) AS REAL)        AS vendas
+SELECT CAST(COUNT(*) AS REAL)        AS vendas
       , SUM(quantidade)               AS quantidade
       , SUM(f_vendas.preco_unitario)  AS preco_vendas
       , SUM(d_produto.preco_unitario) AS preco_produto
@@ -701,11 +702,11 @@
       , ROUND(SUM(receita_liquida) / COUNT(*)            , 2)          AS ticket_medio
       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
+   ON f_vendas.produto_id = d_produto.produto_id
 
- SELECT nome
+SELECT nome
       , CAST(COUNT(*) AS REAL)        AS vendas
 --       , SUM(quantidade)               AS quantidade
 --       , SUM(f_vendas.preco_unitario)  AS preco_vendas
@@ -723,17 +724,17 @@
       , ROUND(SUM(receita_liquida) / COUNT(*)            , 2)          AS ticket_medio
 --       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
 --       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
+   ON f_vendas.produto_id = d_produto.produto_id
    LEFT JOIN d_fornecedor
-      ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
-  GROUP BY nome
-  ORDER BY ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) DESC
+   ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
+GROUP BY nome
+ORDER BY ROUND(100 * SUM(lucro)     / SUM(receita_liquida), 2) DESC
       , nome;
 
 
- SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
+SELECT CAST(strftime('%Y', "data") AS INTEGER)   AS ano
       , nome
       , CAST(COUNT(*) AS REAL)        AS vendas
 --       , SUM(quantidade)               AS quantidade
@@ -752,17 +753,17 @@
       , ROUND(SUM(receita_liquida) / COUNT(*)            , 2)          AS ticket_medio
 --       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
 --       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
+   ON f_vendas.produto_id = d_produto.produto_id
    LEFT JOIN d_fornecedor
-      ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
-  GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
+   ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
+GROUP BY CAST(strftime('%Y', "data") AS INTEGER)
       , nome
-  ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
+ORDER BY CAST(strftime('%Y', "data") AS INTEGER)
       , nome;
 
- SELECT nome
+SELECT nome
       , CASE
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  1 THEN 'Jan'
             WHEN CAST(strftime('%m', "data") AS INTEGER) =  2 THEN 'Fev'
@@ -795,14 +796,14 @@
       , ROUND(SUM(receita_liquida) / COUNT(*)            , 2)          AS ticket_medio
 --       , ROUND(100 * SUM(desconto)  / SUM(receita_liquida), 2) || '%'   AS desconto_receita
 --       , ROUND(100 * SUM(desconto)  / SUM(lucro)          , 2) || '%'   AS desconto_lucro
-   FROM f_vendas
+FROM f_vendas
    LEFT JOIN d_produto
-      ON f_vendas.produto_id = d_produto.produto_id
+   ON f_vendas.produto_id = d_produto.produto_id
    LEFT JOIN d_fornecedor
-      ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
-  GROUP BY CAST(strftime('%m', "data") AS INTEGER)
+   ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
+GROUP BY CAST(strftime('%m', "data") AS INTEGER)
       , nome
-  ORDER BY CAST(strftime('%m', "data") AS INTEGER)
+ORDER BY CAST(strftime('%m', "data") AS INTEGER)
       , nome;
 
 
@@ -815,8 +816,11 @@
 -- ==========================================
 -- A) Consolida VENDAS por ano e mes
 -- ==========================================
-WITH vendas_mensal AS (
- SELECT (CAST(strftime('%Y', "data") AS INTEGER) * 100 +
+WITH
+   vendas_mensal
+   AS
+   (
+      SELECT (CAST(strftime('%Y', "data") AS INTEGER) * 100 +
          CAST(strftime('%m', "data") AS INTEGER)) AS ano_mes
       , CAST(COUNT(*) AS REAL)  AS vendas
       , SUM(quantidade)         AS quantidade
@@ -825,31 +829,37 @@ WITH vendas_mensal AS (
       , SUM(receita_liquida)    AS receita_liquida
       , SUM(custo_total)        AS custo
       , SUM(lucro)              AS lucro
-   FROM f_vendas
-  WHERE (CAST(strftime('%Y', "data") AS INTEGER) * 100 +
+      FROM f_vendas
+      WHERE (CAST(strftime('%Y', "data") AS INTEGER) * 100 +
          CAST(strftime('%m', "data") AS INTEGER)) <= 201909
-  GROUP BY ano_mes
-  ORDER BY ano_mes
-)
+      GROUP BY ano_mes
+      ORDER BY ano_mes
+   )
 
 -- ==========================================
 -- B) Consolida METAS por ano e mes
 -- ==========================================
-, metas_mensal AS (
- SELECT (ano * 100 + mes)    AS ano_mes
+,
+   metas_mensal
+   AS
+   (
+      SELECT (ano * 100 + mes)    AS ano_mes
       , SUM(meta_quantidade) AS meta_quantidade
       , SUM(meta_receita)    AS meta_receita
-   FROM d_meta_mensal
-  WHERE (ano * 100 + mes) <= 201909
-  GROUP BY ano_mes
-  ORDER BY ano_mes
-)
+      FROM d_meta_mensal
+      WHERE (ano * 100 + mes) <= 201909
+      GROUP BY ano_mes
+      ORDER BY ano_mes
+   )
 
 -- ==========================================
 -- C) Junta vendas e metas
 -- ==========================================
-, mensal AS (
- SELECT v.ano_mes
+,
+   mensal
+   AS
+   (
+      SELECT v.ano_mes
       , v.vendas
       , v.quantidade
       , m.meta_quantidade
@@ -859,57 +869,74 @@ WITH vendas_mensal AS (
       , v.custo
       , v.lucro
       , m.meta_receita
-   FROM vendas_mensal v
-   LEFT JOIN metas_mensal m
-      ON v.ano_mes = m.ano_mes
-  ORDER BY v.ano_mes
-)
+      FROM vendas_mensal v
+         LEFT JOIN metas_mensal m
+         ON v.ano_mes = m.ano_mes
+      ORDER BY v.ano_mes
+   )
 
 -- ==========================================
 -- D) Descobre primeiro e último mês válidos
 -- ==========================================
-, limites AS (
- SELECT MIN(ano_mes) AS ano_mes_inicial
+,
+   limites
+   AS
+   (
+      SELECT MIN(ano_mes) AS ano_mes_inicial
       , MAX(ano_mes) AS ano_mes_final
-   FROM mensal
-)
+      FROM mensal
+   )
 
 -- ==========================================
 -- E) Calcula diferença total em meses
 -- ==========================================
-, periodo AS (
- SELECT 
-      (
+,
+   periodo
+   AS
+   (
+      SELECT
+         (
         ((ano_mes_final / 100) - (ano_mes_inicial / 100)) * 12
       +
         ((ano_mes_final % 100) - (ano_mes_inicial % 100))
       ) AS meses_totais
-   FROM limites
-)
+      FROM limites
+   )
 
 -- ==========================================
 -- F) Captura mês inicial
 -- ==========================================
-, mi AS (
- SELECT *
-   FROM mensal
-  WHERE ano_mes = (SELECT ano_mes_inicial FROM limites)
-)
+,
+   mi
+   AS
+   (
+      SELECT *
+      FROM mensal
+      WHERE ano_mes = (SELECT ano_mes_inicial
+      FROM limites)
+   )
 
 -- ==========================================
 -- G) Captura mês final
 -- ==========================================
-, mf AS (
- SELECT *
-   FROM mensal
-  WHERE ano_mes = (SELECT ano_mes_final FROM limites)
-)
+,
+   mf
+   AS
+   (
+      SELECT *
+      FROM mensal
+      WHERE ano_mes = (SELECT ano_mes_final
+      FROM limites)
+   )
 
 -- ==========================================
 -- H) Calcula todos os ratios como REAL
 -- ==========================================
-, ratios AS (
- SELECT 1.0 * mf.vendas          / NULLIF(mi.vendas, 0)           AS r_vendas
+,
+   ratios
+   AS
+   (
+      SELECT 1.0 * mf.vendas          / NULLIF(mi.vendas, 0)           AS r_vendas
       , 1.0 * mf.quantidade      / NULLIF(mi.quantidade, 0)       AS r_quantidade
       , 1.0 * mf.meta_quantidade / NULLIF(mi.meta_quantidade, 0)  AS r_meta_qtde
       , 1.0 * mf.receita_bruta   / NULLIF(mi.receita_bruta, 0)    AS r_rec_bruta
@@ -922,14 +949,14 @@ WITH vendas_mensal AS (
     , ((1.0 * mf.receita_liquida / mf.vendas) / NULLIF((1.0 * mi.receita_liquida / mi.vendas), 0))   AS r_ticket_medio
    -- Margem
     , ((1.0 * mf.lucro / mf.receita_liquida) / NULLIF((1.0 * mi.lucro / mi.receita_liquida), 0))     AS r_margem
-   FROM mi
-   JOIN mf
-)
+      FROM mi
+         JOIN mf 
+   )
 
 -- ==========================================
 -- I) Calcula o CAGR anualizado
 -- ==========================================
- SELECT ROUND(100 * (POWER(r.r_vendas,       12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_vendas
+SELECT ROUND(100 * (POWER(r.r_vendas,       12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_vendas
       , ROUND(100 * (POWER(r.r_quantidade,   12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_qtde
       , ROUND(100 * (POWER(r.r_meta_qtde,    12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_meta_qtde
       , ROUND(100 * (POWER(r.r_rec_bruta,    12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_rec_bruta
@@ -940,7 +967,7 @@ WITH vendas_mensal AS (
       , ROUND(100 * (POWER(r.r_meta_rec,     12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_meta_rec
       , ROUND(100 * (POWER(r.r_margem,       12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_margem
       , ROUND(100 * (POWER(r.r_ticket_medio, 12.0 / p.meses_totais) - 1), 2) || '%' AS CAGR_ticket_medio
-   FROM ratios r
+FROM ratios r
    CROSS JOIN periodo p
 
 
@@ -954,9 +981,11 @@ WITH vendas_mensal AS (
 -- ==========================================
 -- A) Base mensal (vendas)
 -- ==========================================
-WITH mensal_base AS (
+WITH mensal_base
+AS
+(
  SELECT -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
-        (CAST(strftime('%Y',"data") AS INTEGER) * 100 +
+   (CAST(strftime('%Y',"data") AS INTEGER) * 100 +
          CAST(strftime('%m',"data") AS INTEGER)) AS ano_mes
       , CAST(COUNT(*) AS REAL) AS vendas
       , SUM(quantidade)        AS quantidade
@@ -965,30 +994,32 @@ WITH mensal_base AS (
       , SUM(receita_liquida)   AS receita_liquida
       , SUM(custo_total)       AS custo
       , SUM(lucro)             AS lucro
-   FROM f_vendas
+FROM f_vendas
 --    LEFT JOIN <TABELA DA VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>
 --      ON <CHAVES CORRESPONDENTES>
-  WHERE (CAST(strftime('%Y',"data") AS INTEGER) * 100 +
+WHERE (CAST(strftime('%Y',"data") AS INTEGER) * 100 +
          CAST(strftime('%m',"data") AS INTEGER)) <= 201909
-  GROUP BY -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
+GROUP BY -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
         ano_mes
 )
 
 -- ==========================================
 -- B) Sequencia continua de meses
 -- ==========================================
-, mensal_index AS (
+, mensal_index AS
+(
  SELECT *
       , ((ano_mes / 100) * 12 + (ano_mes % 100)) AS mes_seq
-   FROM mensal_base
+FROM mensal_base
 )
 
 -- ==========================================
 -- C) Rolling 12M
 -- ==========================================
-, rolling_12m AS (
+, rolling_12m AS
+(
  SELECT -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
-        ano_mes
+   ano_mes
       , mes_seq
       , SUM(vendas)          OVER (-- PARTITION BY <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>
                                     ORDER BY mes_seq ROWS BETWEEN 11 PRECEDING AND CURRENT ROW) AS vendas_12m
@@ -1004,15 +1035,16 @@ WITH mensal_base AS (
                                     ORDER BY mes_seq ROWS BETWEEN 11 PRECEDING AND CURRENT ROW) AS custo_12m
       , SUM(lucro)           OVER (-- PARTITION BY <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>
                                     ORDER BY mes_seq ROWS BETWEEN 11 PRECEDING AND CURRENT ROW) AS lucro_12m
-   FROM mensal_index
+FROM mensal_index
 )
 
 -- ==========================================
 -- D) Metrica do Preco Medio
 -- ==========================================
-, metrics AS (
+, metrics AS
+(
  SELECT -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
-        ano_mes
+   ano_mes
       , mes_seq
       , vendas_12m
       , qtde_12m
@@ -1022,15 +1054,16 @@ WITH mensal_base AS (
       , custo_12m
       , lucro_12m
       , 1.0 * rec_liq_12m / NULLIF(qtde_12m,0) AS preco_medio
-   FROM rolling_12m
+FROM rolling_12m
 )
 
 -- ==========================================
 -- E) Comparacao com 12M anteriores
 -- ==========================================
-, comparison AS (
+, comparison AS
+(
  SELECT -- m1.<VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
-        m1.ano_mes
+   m1.ano_mes
       , m1.mes_seq
    -- atual
       , m1.vendas_12m
@@ -1050,18 +1083,18 @@ WITH mensal_base AS (
       , m2.custo_12m      AS custo_12m_prev
       , m2.lucro_12m      AS lucro_12m_prev
       , m2.preco_medio    AS preco_medio_prev
-   FROM metrics m1
+FROM metrics m1
    LEFT JOIN metrics m2
-     ON m2.mes_seq = m1.mes_seq - 12
+   ON m2.mes_seq = m1.mes_seq - 12
 --     AND m2.<VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR> = m1.<VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>
-  WHERE m2.mes_seq IS NOT NULL
+WHERE m2.mes_seq IS NOT NULL
 )
 
 -- ==========================================
 -- F) CAGR Rolling 12M e Decomposicao do Mix
 -- ==========================================
- SELECT -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
-        ano_mes
+SELECT -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
+   ano_mes
       , ROUND(100 * (1.0 * vendas_12m    / NULLIF(vendas_12m_prev, 0)    - 1),2) || '%'  AS cagr_vendas_12m
       , ROUND(100 * (1.0 * qtde_12m      / NULLIF(qtde_12m_prev, 0)      - 1),2) || '%'  AS cagr_qtde_12m
       , ROUND(100 * (1.0 * rec_bruta_12m / NULLIF(rec_bruta_12m_prev, 0) - 1),2) || '%'  AS cagr_rec_bruta_12m
@@ -1088,8 +1121,8 @@ WITH mensal_base AS (
          ((qtde_12m - qtde_12m_prev) * preco_medio_prev +
           (preco_medio - preco_medio_prev) * qtde_12m_prev +
           (qtde_12m - qtde_12m_prev) * (preco_medio - preco_medio_prev)), 6) AS check_decomposicao
-   FROM comparison
-  ORDER BY -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
+FROM comparison
+ORDER BY -- <VARIAVEL DIMENSAO PELA QUAL SE PRETENDE AGRUPAR>,
         ano_mes;
 
 
@@ -1098,18 +1131,18 @@ WITH mensal_base AS (
 -->    Primeiro os deficitarios
 ---------------------------------------------------------------------------
 
- SELECT f_vendas.*
+SELECT f_vendas.*
       , ROUND(d_produto.preco_unitario, 2)                       AS preco_unitario_sugerido
       , ROUND(d_produto.custo_unitario, 2)                       AS custo_unitario_sugerido
       , ROUND(d_produto.custo_unitario * f_vendas.quantidade, 2) AS custo_total_sugerido
       , ROUND(100 * f_vendas.lucro / f_vendas.receita_liquida, 2) || '%'  AS margem_financeira
-   FROM f_vendas
+FROM f_vendas
    JOIN d_produto
-     ON f_vendas.produto_id = d_produto.produto_id
-  WHERE f_vendas.quantidade = 1
-    AND (f_vendas.preco_unitario <= d_produto.preco_unitario
-      OR f_vendas.custo_total <= d_produto.custo_unitario * f_vendas.quantidade)
-  ORDER BY ROUND(100 * f_vendas.lucro / f_vendas.receita_liquida, 2) DESC
+   ON f_vendas.produto_id = d_produto.produto_id
+WHERE f_vendas.quantidade = 1
+   AND (f_vendas.preco_unitario <= d_produto.preco_unitario
+   OR f_vendas.custo_total <= d_produto.custo_unitario * f_vendas.quantidade)
+ORDER BY ROUND(100 * f_vendas.lucro / f_vendas.receita_liquida, 2) DESC
       , f_vendas.desconto DESC
       , f_vendas.preco_unitario DESC
       , f_vendas.custo_total DESC;
@@ -1120,18 +1153,18 @@ WITH mensal_base AS (
 -->    Segundo os superavitarios
 ---------------------------------------------------------------------------
 
- SELECT f_vendas.*
+SELECT f_vendas.*
       , ROUND(d_produto.preco_unitario, 2)                       AS preco_unitario_sugerido
       , ROUND(d_produto.custo_unitario, 2)                       AS custo_unitario_sugerido
       , ROUND(d_produto.custo_unitario * f_vendas.quantidade, 2) AS custo_total_sugerido
       , ROUND(100 * f_vendas.lucro / f_vendas.receita_liquida, 2) || '%'  AS margem_financeira
-   FROM f_vendas
+FROM f_vendas
    JOIN d_produto
-     ON f_vendas.produto_id = d_produto.produto_id
-  WHERE f_vendas.quantidade = 1
-    AND f_vendas.preco_unitario > d_produto.preco_unitario
-    AND f_vendas.custo_total > d_produto.custo_unitario * f_vendas.quantidade
-  ORDER BY ROUND(100 * f_vendas.lucro / f_vendas.receita_liquida, 2) DESC
+   ON f_vendas.produto_id = d_produto.produto_id
+WHERE f_vendas.quantidade = 1
+   AND f_vendas.preco_unitario > d_produto.preco_unitario
+   AND f_vendas.custo_total > d_produto.custo_unitario * f_vendas.quantidade
+ORDER BY ROUND(100 * f_vendas.lucro / f_vendas.receita_liquida, 2) DESC
       , f_vendas.desconto DESC
       , f_vendas.preco_unitario DESC
       , f_vendas.custo_total DESC;
@@ -1142,7 +1175,7 @@ WITH mensal_base AS (
 -->    Terceiro os resumos
 ---------------------------------------------------------------------------
 
- SELECT 'Todos'                             AS tipo
+   SELECT 'Todos'                             AS tipo
       , COUNT(*)                            AS transacoes
       , ROUND(SUM(quantidade), 2)           AS quantidade
       , ROUND(SUM(receita_bruta), 2)        AS receita_bruta
@@ -1161,16 +1194,16 @@ WITH mensal_base AS (
          , ROUND(d_produto.custo_unitario, 2)                       AS custo_unitario_sugerido
          , ROUND(d_produto.custo_unitario * f_vendas.quantidade, 2) AS custo_total_sugerido
       FROM f_vendas
-      JOIN d_produto
-        ON f_vendas.produto_id = d_produto.produto_id
-     ORDER BY f_vendas.desconto DESC
+         JOIN d_produto
+         ON f_vendas.produto_id = d_produto.produto_id
+      ORDER BY f_vendas.desconto DESC
          , f_vendas.preco_unitario DESC
          , f_vendas.custo_total DESC
    ) AS AUX_All
 
 UNION ALL
 
- SELECT 'Deficitarios'                      AS tipo
+   SELECT 'Deficitarios'                      AS tipo
       , COUNT(*)                            AS transacoes
       , ROUND(SUM(quantidade), 2)           AS quantidade
       , ROUND(SUM(receita_bruta), 2)        AS receita_bruta
@@ -1189,18 +1222,18 @@ UNION ALL
          , ROUND(d_produto.custo_unitario, 2)                       AS custo_unitario_sugerido
          , ROUND(d_produto.custo_unitario * f_vendas.quantidade, 2) AS custo_total_sugerido
       FROM f_vendas
-      JOIN d_produto
-        ON f_vendas.produto_id = d_produto.produto_id
-     WHERE f_vendas.preco_unitario <= d_produto.preco_unitario
-        OR f_vendas.custo_total <= d_produto.custo_unitario * f_vendas.quantidade
-     ORDER BY f_vendas.desconto DESC
+         JOIN d_produto
+         ON f_vendas.produto_id = d_produto.produto_id
+      WHERE f_vendas.preco_unitario <= d_produto.preco_unitario
+         OR f_vendas.custo_total <= d_produto.custo_unitario * f_vendas.quantidade
+      ORDER BY f_vendas.desconto DESC
          , f_vendas.preco_unitario DESC
          , f_vendas.custo_total DESC
    ) AS AUX_Def
 
 UNION ALL
 
- SELECT 'Superavitarios'                    AS tipo
+   SELECT 'Superavitarios'                    AS tipo
       , COUNT(*)                            AS transacoes
       , ROUND(SUM(quantidade), 2)           AS quantidade
       , ROUND(SUM(receita_bruta), 2)        AS receita_bruta
@@ -1219,11 +1252,11 @@ UNION ALL
          , ROUND(d_produto.custo_unitario, 2)                       AS custo_unitario_sugerido
          , ROUND(d_produto.custo_unitario * f_vendas.quantidade, 2) AS custo_total_sugerido
       FROM f_vendas
-      JOIN d_produto
-        ON f_vendas.produto_id = d_produto.produto_id
-     WHERE f_vendas.preco_unitario > d_produto.preco_unitario
-       AND f_vendas.custo_total > d_produto.custo_unitario * f_vendas.quantidade
-     ORDER BY f_vendas.desconto DESC
+         JOIN d_produto
+         ON f_vendas.produto_id = d_produto.produto_id
+      WHERE f_vendas.preco_unitario > d_produto.preco_unitario
+         AND f_vendas.custo_total > d_produto.custo_unitario * f_vendas.quantidade
+      ORDER BY f_vendas.desconto DESC
          , f_vendas.preco_unitario DESC
          , f_vendas.custo_total DESC
    ) AS AUX_Sup;

@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------------------------------------
 --                                                                                                          
 --   ######                                                  ######                                         
 --   #     #   ##   #    #  ####   ####     #####  ######    #     #   ##   #####   ####   ####             
@@ -28,37 +29,40 @@
 --> Tabela d_calendario
 ---------------------------------------------------------------------------
 
-SELECT * FROM d_calendario;
+SELECT *
+FROM d_calendario;
 
 
 ---------------------------------------------------------------------------
 --> Tabela d_fornecedor
 ---------------------------------------------------------------------------
 
-SELECT * FROM d_fornecedor;
+SELECT *
+FROM d_fornecedor;
 
- SELECT MIN(prazo_entrega_dias)  AS Prazo_Min
+SELECT MIN(prazo_entrega_dias)  AS Prazo_Min
       , AVG(prazo_entrega_dias)  AS Prazo_Med
       , MAX(prazo_entrega_dias)  AS Prazo_Max
-   FROM d_fornecedor;
+FROM d_fornecedor;
 
 ---------------------------------------------------------------------------
 --> Tabela d_meta_mensal
 ---------------------------------------------------------------------------
 
-SELECT * FROM d_meta_mensal;
+SELECT *
+FROM d_meta_mensal;
 
- SELECT COUNT(*)                         AS Registros
+SELECT COUNT(*)                         AS Registros
       , ROUND(MIN(meta_receita), 2)      AS Meta_Receita_Min
       , ROUND(AVG(meta_receita), 2)      AS Meta_Receita_Med
       , ROUND(MAX(meta_receita), 2)      AS Meta_Receita_Max
       , ROUND(MIN(meta_quantidade), 2)   AS Meta_Quantidade_Min
       , ROUND(AVG(meta_quantidade), 2)   AS Meta_Quantidade_Med
       , ROUND(MAX(meta_quantidade), 2)   AS Meta_Quantidade_Max
-   FROM d_meta_mensal
-  WHERE ano * 100 + mes < 201910;
+FROM d_meta_mensal
+WHERE ano * 100 + mes < 201910;
 
- SELECT ano
+SELECT ano
       , COUNT(*)                         AS Registros
       , ROUND(MIN(meta_receita), 2)      AS Meta_Receita_Min
       , ROUND(AVG(meta_receita), 2)      AS Meta_Receita_Med
@@ -66,12 +70,12 @@ SELECT * FROM d_meta_mensal;
       , ROUND(MIN(meta_quantidade), 2)   AS Meta_Quantidade_Min
       , ROUND(AVG(meta_quantidade), 2)   AS Meta_Quantidade_Med
       , ROUND(MAX(meta_quantidade), 2)   AS Meta_Quantidade_Max
-   FROM d_meta_mensal
-  WHERE ano * 100 + mes < 201910
-  GROUP BY ano
-  ORDER BY ano;
+FROM d_meta_mensal
+WHERE ano * 100 + mes < 201910
+GROUP BY ano
+ORDER BY ano;
 
- SELECT mes
+SELECT mes
       , COUNT(*)                         AS Registros
       , ROUND(MIN(meta_receita), 2)      AS Meta_Receita_Min
       , ROUND(AVG(meta_receita), 2)      AS Meta_Receita_Med
@@ -79,22 +83,22 @@ SELECT * FROM d_meta_mensal;
       , ROUND(MIN(meta_quantidade), 2)   AS Meta_Quantidade_Min
       , ROUND(AVG(meta_quantidade), 2)   AS Meta_Quantidade_Med
       , ROUND(MAX(meta_quantidade), 2)   AS Meta_Quantidade_Max
-   FROM d_meta_mensal
-  WHERE ano * 100 + mes < 201910
-  GROUP BY mes
-  ORDER BY mes;
+FROM d_meta_mensal
+WHERE ano * 100 + mes < 201910
+GROUP BY mes
+ORDER BY mes;
 
 
 ---------------------------------------------------------------------------
 --> Tabela d_produto
 ---------------------------------------------------------------------------
 
- SELECT *
+SELECT *
       , ROUND(100 * ((preco_unitario / custo_unitario) - 1), 1)     AS margem_percentual_calc
       , ROUND(custo_unitario * (1 + (margem_percentual / 100)), 2)  AS preco_unitario_calc
-   FROM d_produto;
+FROM d_produto;
 
- SELECT COUNT(*)                         AS Registros
+SELECT COUNT(*)                         AS Registros
       , ROUND(MIN(preco_unitario), 2)    AS Preco_Unit_Min
       , ROUND(AVG(preco_unitario), 2)    AS Preco_Unit_Med
       , ROUND(MAX(preco_unitario), 2)    AS Preco_Unit_Max
@@ -110,9 +114,9 @@ SELECT * FROM d_meta_mensal;
       , ROUND(MIN(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Min
       , ROUND(AVG(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Med
       , ROUND(MAX(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Max
-   FROM d_produto;
+FROM d_produto;
 
- SELECT exige_receita
+SELECT exige_receita
       , COUNT(*)                         AS Registros
       , ROUND(MIN(preco_unitario), 2)    AS Preco_Unit_Min
       , ROUND(AVG(preco_unitario), 2)    AS Preco_Unit_Med
@@ -129,11 +133,11 @@ SELECT * FROM d_meta_mensal;
       , ROUND(MIN(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Min
       , ROUND(AVG(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Med
       , ROUND(MAX(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Max
-   FROM d_produto
-  GROUP BY exige_receita
-  ORDER BY exige_receita;
+FROM d_produto
+GROUP BY exige_receita
+ORDER BY exige_receita;
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , COUNT(*)                         AS Registros
       , ROUND(MIN(preco_unitario), 2)    AS Preco_Unit_Min
       , ROUND(AVG(preco_unitario), 2)    AS Preco_Unit_Med
@@ -150,11 +154,11 @@ SELECT * FROM d_meta_mensal;
       , ROUND(MIN(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Min
       , ROUND(AVG(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Med
       , ROUND(MAX(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Max
-   FROM d_produto
-  GROUP BY grupo_terapeutico
-  ORDER BY grupo_terapeutico;
+FROM d_produto
+GROUP BY grupo_terapeutico
+ORDER BY grupo_terapeutico;
 
- SELECT categoria
+SELECT categoria
       , COUNT(*)                         AS Registros
       , ROUND(MIN(preco_unitario), 2)    AS Preco_Unit_Min
       , ROUND(AVG(preco_unitario), 2)    AS Preco_Unit_Med
@@ -171,41 +175,42 @@ SELECT * FROM d_meta_mensal;
       , ROUND(MIN(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Min
       , ROUND(AVG(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Med
       , ROUND(MAX(custo_unitario * (1 + (margem_percentual / 100))), 2)   AS  Preco_Calc_Max
-   FROM d_produto
-  GROUP BY categoria
-  ORDER BY categoria;
+FROM d_produto
+GROUP BY categoria
+ORDER BY categoria;
 
 
 ---------------------------------------------------------------------------
 --> Tabela d_turno
 ---------------------------------------------------------------------------
 
-SELECT * FROM d_turno;
+SELECT *
+FROM d_turno;
 
 
 ---------------------------------------------------------------------------
 --> Tabela f_vendas
 ---------------------------------------------------------------------------
 
- SELECT *
+SELECT *
       , ROUND(receita_bruta - receita_bruta_calc, 2)       AS receita_bruta_dif
       , ROUND(receita_liquida - receita_liquida_calc, 2)   AS receita_liquida_dif
       , ROUND(lucro - lucro_calc, 2)                       AS lucro_dif
-   FROM (
+FROM (
     SELECT *
          , ROUND(quantidade * preco_unitario, 2)                          AS receita_bruta_calc
          , ROUND(quantidade * preco_unitario - desconto, 2)               AS receita_liquida_calc
          , ROUND(quantidade * preco_unitario - desconto - custo_total, 2) AS lucro_calc
-      FROM f_vendas
+   FROM f_vendas
    ) AS Aux
-  WHERE ABS(ROUND(receita_bruta - receita_bruta_calc, 2)) > 0.001
-     OR ABS(ROUND(receita_liquida - receita_liquida_calc, 2)) > 0.001
-     OR ABS(ROUND(lucro - lucro_calc, 2)) > 0.001
-  ORDER BY ABS(receita_bruta_dif) DESC
+WHERE ABS(ROUND(receita_bruta - receita_bruta_calc, 2)) > 0.001
+   OR ABS(ROUND(receita_liquida - receita_liquida_calc, 2)) > 0.001
+   OR ABS(ROUND(lucro - lucro_calc, 2)) > 0.001
+ORDER BY ABS(receita_bruta_dif) DESC
       , ABS(receita_liquida_dif) DESC
       , ABS(lucro_dif) DESC;
 
- SELECT COUNT(*)                         AS Registros
+SELECT COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
       , ROUND(MAX(quantidade), 2)        AS Qtde_Max
@@ -227,9 +232,9 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas;
+FROM f_vendas;
 
- SELECT forma_pagamento
+SELECT forma_pagamento
       , COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
@@ -252,11 +257,11 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas
-  GROUP BY forma_pagamento
-  ORDER BY forma_pagamento;
+FROM f_vendas
+GROUP BY forma_pagamento
+ORDER BY forma_pagamento;
 
- SELECT nome
+SELECT nome
       , COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
@@ -279,13 +284,13 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas
+FROM f_vendas
    JOIN d_fornecedor
-     ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
-  GROUP BY nome
-  ORDER BY nome;
- 
- SELECT nome_produto
+   ON f_vendas.fornecedor_id = d_fornecedor.fornecedor_id
+GROUP BY nome
+ORDER BY nome;
+
+SELECT nome_produto
       , COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
@@ -311,13 +316,13 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas
+FROM f_vendas
    JOIN d_produto
-     ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY nome_produto
-  ORDER BY nome_produto;
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY nome_produto
+ORDER BY nome_produto;
 
- SELECT categoria
+SELECT categoria
       , COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
@@ -343,13 +348,13 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas
+FROM f_vendas
    JOIN d_produto
-     ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY categoria
-  ORDER BY categoria;
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY categoria
+ORDER BY categoria;
 
- SELECT grupo_terapeutico
+SELECT grupo_terapeutico
       , COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
@@ -375,13 +380,13 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas
+FROM f_vendas
    JOIN d_produto
-     ON f_vendas.produto_id = d_produto.produto_id
-  GROUP BY grupo_terapeutico
-  ORDER BY grupo_terapeutico;
+   ON f_vendas.produto_id = d_produto.produto_id
+GROUP BY grupo_terapeutico
+ORDER BY grupo_terapeutico;
 
- SELECT turno_id
+SELECT turno_id
       , COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
@@ -404,11 +409,11 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas
-  GROUP BY turno_id
-  ORDER BY turno_id;
+FROM f_vendas
+GROUP BY turno_id
+ORDER BY turno_id;
 
- SELECT hora
+SELECT hora
       , COUNT(*)                         AS Registros
       , ROUND(MIN(quantidade), 2)        AS Qtde_Min
       , ROUND(AVG(quantidade), 2)        AS Qtde_Med
@@ -431,6 +436,6 @@ SELECT * FROM d_turno;
       , ROUND(MIN(lucro), 2)             AS Lucro_Min
       , ROUND(AVG(lucro), 2)             AS Lucro_Med
       , ROUND(MAX(lucro), 2)             AS Lucro_Max
-   FROM f_vendas
-  GROUP BY hora
-  ORDER BY hora;
+FROM f_vendas
+GROUP BY hora
+ORDER BY hora;
