@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------------------------------------
 --                                                                                                          
 --   ######                                                  ######                                         
 --   #     #   ##   #    #  ####   ####     #####  ######    #     #   ##   #####   ####   ####             
@@ -41,7 +42,8 @@
 --> Tabela d_calendario
 ---------------------------------------------------------------------------
 
-CREATE TABLE d_calendario (
+CREATE TABLE d_calendario
+(
     data DATE PRIMARY KEY,
     ano INTEGER,
     mes INTEGER,
@@ -59,7 +61,8 @@ CREATE TABLE d_calendario (
 --> Tabela d_fornecedor
 ---------------------------------------------------------------------------
 
-CREATE TABLE d_fornecedor (
+CREATE TABLE d_fornecedor
+(
     fornecedor_id INTEGER PRIMARY KEY,
     nome TEXT,
     cidade TEXT,
@@ -73,7 +76,8 @@ CREATE TABLE d_fornecedor (
 --> Tabela d_meta_mensal
 ---------------------------------------------------------------------------
 
-CREATE TABLE d_meta_mensal (
+CREATE TABLE d_meta_mensal
+(
     meta_id INTEGER PRIMARY KEY,
     ano INTEGER,
     mes INTEGER,
@@ -86,7 +90,8 @@ CREATE TABLE d_meta_mensal (
 --> Tabela d_produto
 ---------------------------------------------------------------------------
 
-CREATE TABLE d_produto (
+CREATE TABLE d_produto
+(
     produto_id INTEGER PRIMARY KEY,
     nome_produto TEXT,
     codigo_atc TEXT,
@@ -103,7 +108,8 @@ CREATE TABLE d_produto (
 --> Tabela d_turno
 ---------------------------------------------------------------------------
 
-CREATE TABLE d_turno (
+CREATE TABLE d_turno
+(
     turno_id INTEGER PRIMARY KEY,
     nome_turno TEXT,
     hora_inicio INTEGER,
@@ -115,7 +121,8 @@ CREATE TABLE d_turno (
 --> Tabela f_vendas
 ---------------------------------------------------------------------------
 
-CREATE TABLE f_vendas (
+CREATE TABLE f_vendas
+(
     venda_id INTEGER PRIMARY KEY,
     data DATE,
     hora INTEGER,

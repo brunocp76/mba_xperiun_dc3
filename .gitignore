@@ -1,8 +1,12 @@
-.previas/
-.previas/*.*
-documentacao_farma_xperiun.docx
+previas/
 Descricao_do_Desafio.md
-farma_xperiun.db
+documentacao_farma_xperiun.docx
 Datacast.m4a
+Entrega Final.zip
+farma_xperiun.db
+farma_xperiun_queries.docx
 *.csv
+*.pbix
+*.pdf
+*.png
 *.srt
